@@ -332,7 +332,10 @@ if (typeof window.cyInit === 'undefined') {
       }
 
       var activeElement = document.activeElement;
-      if (activeElement.tagName.toLowerCase() === 'input') {
+      if (
+        activeElement.tagName.toLowerCase() === 'input' &&
+        activeElement.type.toLowerCase() !== 'submit'
+      ) {
         if (
           activeElement.focusValue !== '' &&
           activeElement.value.split(activeElement.focusValue)[0].length === 0
