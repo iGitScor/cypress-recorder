@@ -1,0 +1,158 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        white-space: nowrap;
+        background: #F6F4F4;
+      }
+
+      h1 {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      p {
+        text-align: left;
+        width: 100%;
+      }
+
+      #container {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+
+      .site-wrapper {
+        margin: 8px;
+      }
+      
+      .small {
+        font-size: 14px;
+      }
+
+      .accent {
+        color: rgb(230, 75, 75);
+      }
+
+      footer {
+        background: lightblue;
+        color: darkblue;
+        padding: 8px 16px;
+      }
+
+      button {
+        display: block;
+      }
+
+      @-webkit-keyframes stripe-slide {
+        0% {
+          background-position: 0% 0;
+        }
+        100% {
+          background-position: 100% 0;
+        }
+      }
+      @keyframes stripe-slide {
+        0% {
+          background-position: 0% 0;
+        }
+        100% {
+          background-position: 100% 0;
+        }
+      }
+
+      .btn {
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        line-height: normal;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+        text-transform: uppercase;
+        padding: 16px 36px 22px;
+        background-color: #fff;
+        color: #666;
+        border: 2px solid #666;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        transition: all .5s ease;
+      }
+
+      .btn::-moz-focus-inner {
+        padding: 0;
+        border: 0;
+      }
+
+      .btn--stripe {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .btn--stripe:after {
+        content: '';
+        display: block;
+        height: 7px;
+        width: 100%;
+        background-image: -webkit-repeating-linear-gradient(45deg, #666, #666 1px, transparent 2px, transparent 5px);
+        background-image: repeating-linear-gradient(45deg, #666, #666 1px, transparent 2px, transparent 5px);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-top: 1px solid #666;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-size: 7px 7px;
+      }
+
+      .btn--stripe:hover {
+        background-color: #666;
+        color: #fff;
+        border-color: #000;
+      }
+
+      .btn--stripe:hover:after {
+        background-image: -webkit-repeating-linear-gradient(45deg, #fff, #fff 1px, transparent 2px, transparent 5px);
+        background-image: repeating-linear-gradient(45deg, #fff, #fff 1px, transparent 2px, transparent 5px);
+        border-top: 1px solid #000;
+        -webkit-animation: stripe-slide 12s infinite linear forwards;
+                animation: stripe-slide 12s infinite linear forwards;
+      }
+    </style>
+
+    <script src="popup.js"></script>
+  </head>
+
+  <body>
+    <main class="site-wrapper">
+      <h1>Cypress recorder</h1>
+      <div id="container">
+        <p><strong>Ready</strong> for a scenario record ?</p>
+        <button type="button" class="btn btn--stripe" id="record">Record*</button>
+        <button type="button" class="btn btn--stripe" id="pause">Pause/Stop</button>
+        <button type="button" class="btn btn--stripe" id="save">Save</button>
+        <button type="button" class="btn btn--stripe" id="reset">Reset</button>
+        <button type="button" class="btn btn--stripe" id="status">Status</button>
+        <p>
+          <u>Record rules*:</u>
+          <ol class="small">
+            <li>if a scenario is being recorded, the new scenario will be recorded after the current one (unless manual reset)</li>
+            <li>if a scenario is being recorded, <b class="accent">location change will persist</b> the scenario (unless pause mode is enabled)</li>
+          </ol>
+        </p>
+      </div>
+    </main>
+    <footer>This is not an official extension (yet!)</footer>
+  </body>
+</html>

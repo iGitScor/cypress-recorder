@@ -1,0 +1,29 @@
+{
+  "name": "cypress-recorder",
+  "version": "1.0.0",
+  "description": "Cypress scenario recorder",
+  "main": "init.js",
+  "scripts": {
+    "prettier": "prettier --single-quote --trailing-comma es5 --write '*.js'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iGitScor/cypress-recorder.git"
+  },
+  "keywords": [
+    "cypress",
+    "chrome",
+    "E2E"
+  ],
+  "author": "iGitScor <sebastien.correaud@gmail.com> (http://iscor.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iGitScor/cypress-recorder/issues"
+  },
+  "homepage": "https://github.com/iGitScor/cypress-recorder#readme",
+  "devDependencies": {
+    "prettier": "^1.8.2"
+  },
+  "dependencies": {}
+}

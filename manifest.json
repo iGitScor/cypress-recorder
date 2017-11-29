@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "Cypress recorder",
+  "description": "This extension allows the user to record scenarii and export Cypress code.",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon-cypress.png",
+    "default_title": "Cypress recorder",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["init.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["init.js", "start.js", "pause.js", "status.js", "reset.js", "save.js"],
+    "persistent": false
+  }
+}
