@@ -39,16 +39,31 @@ if (typeof window.cyInit === 'undefined') {
   /** ************************** Attributes ******************************* */
   /** ********************************************************************* */
 
-  function getAttributes(el, attributesToIgnore = ['id', 'class', 'length']) {
+  function getAttributes(el, attributesToAccept = ['data-', 'role', 'type']) {
     const { attributes } = el;
     const attrs = [...attributes];
+    const attrsReduced = attrs.reduce((sum, next) => {
+      attributesToAccept.forEach(attrToAccept => {
+        // Perfect match or begin with data-*
+        if (
+          next.nodeName === attrToAccept ||
+          next.nodeName.match(new RegExp(`${attrToAccept}\\w+`, 'g'))
+        ) {
+          sum.push(`[${next.nodeName}="${next.value}"]`);
+        }
+      });
 
-    return attrs.reduce((sum, next) => {
-      if (!(attributesToIgnore.indexOf(next.nodeName) > -1)) {
-        sum.push(`[${next.nodeName}="${next.value}"]`);
-      }
       return sum;
     }, []);
+
+    const prioritizedAttrs = attrsReduced.filter(
+      attr => attr.match(/data-test-\w+/g) !== null
+    );
+    const otherAttrs = attrsReduced.filter(
+      attr => attr.match(/data-test-\w+/g) === null
+    );
+
+    return prioritizedAttrs.concat(otherAttrs);
   }
 
   /** ********************************************************************* */
@@ -171,11 +186,11 @@ if (typeof window.cyInit === 'undefined') {
   /** ************************ UNIQUE-SELECTOR **************************** */
   /** ********************************************************************* */
 
-  function getAllSelectors(el, selectors, attributesToIgnore) {
+  function getAllSelectors(el, selectors, attributesToAccept) {
     const funcs = {
       Tag: getTag,
       NthChild: getNthChild,
-      Attributes: elem => getAttributes(elem, attributesToIgnore),
+      Attributes: elem => getAttributes(elem, attributesToAccept),
       Class: getClassSelectors,
       ID: getID,
     };
@@ -216,13 +231,13 @@ if (typeof window.cyInit === 'undefined') {
     return null;
   }
 
-  function getUniqueSelector(element, selectorTypes, attributesToIgnore) {
+  function getUniqueSelector(element, selectorTypes, attributesToAccept) {
     let foundSelector;
 
     const elementSelectors = getAllSelectors(
       element,
       selectorTypes,
-      attributesToIgnore
+      attributesToAccept
     );
 
     for (let selectorType of selectorTypes) {
@@ -270,13 +285,14 @@ if (typeof window.cyInit === 'undefined') {
           }
       }
     }
+
     return '*';
   }
 
   function unique(el, options = {}) {
     const {
-      selectorTypes = ['ID', 'Class', 'Tag', 'NthChild'],
-      attributesToIgnore = ['id', 'class', 'length'],
+      selectorTypes = ['ID', 'Attributes', 'Class', 'Tag', 'NthChild'],
+      attributesToAccept = ['data-', 'role', 'type'],
     } = options;
     const allSelectors = [];
     const parents = getParents(el);
@@ -285,7 +301,7 @@ if (typeof window.cyInit === 'undefined') {
       const selector = getUniqueSelector(
         elem,
         selectorTypes,
-        attributesToIgnore
+        attributesToAccept
       );
       if (Boolean(selector)) {
         allSelectors.push(selector);
@@ -323,6 +339,22 @@ if (typeof window.cyInit === 'undefined') {
     }
 
     cyRecord.push(cyEvent);
+  }
+
+  function isSVGChild(element) {
+    return element.ownerSVGElement;
+  }
+
+  function getRealTarget(initialTarget, authorizedTags, deepTags) {
+    // Check if it's a child
+    if (authorizedTags.indexOf(initialTarget.tagName.toLowerCase()) < 0) {
+      // Specific case for SVG children
+      return isSVGChild(initialTarget)
+        ? initialTarget.ownerSVGElement.parentElement
+        : initialTarget.parentElement;
+    }
+
+    return initialTarget;
   }
 
   $('form').forEach(function(element) {
@@ -389,9 +421,11 @@ if (typeof window.cyInit === 'undefined') {
         return;
       }
 
-      // @TODO check if it's a child
-
-      var target = event.target;
+      var target = getRealTarget(
+        event.target,
+        ['button, a, label, input'],
+        ['g', 'path']
+      );
       var activeElement = document.activeElement;
       if (
         activeElement.tagName.toLowerCase() === 'input' &&
