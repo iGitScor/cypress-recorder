@@ -313,7 +313,6 @@ if (typeof window.cyInit === 'undefined') {
       selectors.unshift(it);
       const selector = selectors.join(' > ');
       if (isUnique(selector, el)) {
-        console.log(selector);
         return selector;
       }
     }

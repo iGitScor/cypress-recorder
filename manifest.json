@@ -23,5 +23,9 @@
   "background": {
     "scripts": ["init.js", "start.js", "pause.js", "status.js", "reset.js", "save.js"],
     "persistent": false
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
 }
