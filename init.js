@@ -356,6 +356,49 @@ if (typeof window.cyInit === 'undefined') {
     return initialTarget;
   }
 
+  function isAbsoluteURL(url) {
+    return /^[a-z][a-z0-9+.-]*:/.test(url);
+  }
+
+  const initialXHROpenMethod = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+    this.addEventListener(
+      'readystatechange',
+      function() {
+        if (this.readyState === XMLHttpRequest.DONE) {
+          // Record wait
+          if (this.config) {
+            var alias = `${this.config.method.toLowerCase()}${this.config.url
+              .toString()
+              .toLowerCase()
+              .trim()
+              .normalize('NFD') // Separate accent from letter
+              .replace(/[\u0300-\u036f]/g, '') // Remove all separated accents
+              .replace(/\s+/g, '-') // Replace spaces with -
+              .replace(/[^\w\-]+/g, '-') // Remove all non-word chars
+              .replace(/\-\-+/g, '-') // Replace multiple - with single -
+              .replace(/^-+/, '') // Trim - from start of text
+              .split('-') // Split as url parts
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize url parts
+              .join('')}`;
+            saveEvent({
+              event: 'wait',
+              value: `@${alias}`,
+              route: { ...this.config, alias },
+            });
+          }
+        }
+      },
+      false
+    );
+
+    if (!isAbsoluteURL(url)) {
+      this.config = { method, url, async, user, pass };
+    }
+
+    initialXHROpenMethod.call(this, method, url, async, user, pass);
+  };
+
   $('form').forEach(function(element) {
     element.addEventListener('submit', function(event) {
       if (cyRecording === false) {

@@ -15,6 +15,19 @@ function appendTestcase(trace) {
 function beginTest(trace) {
   trace.push(`
       it('should works', () => {`);
+
+  const routes = cyRecord.filter(record => record.route);
+  console.log(routes);
+  if (routes.length > 0) {
+    trace.push(`
+        cy.server()`);
+    routes.forEach(routeObject => {
+      trace.push(`
+        cy.route('${routeObject.route.method.toUpperCase()}', new RegExp('${
+        routeObject.route.url
+      }', 'g')).as('${routeObject.route.alias}')`);
+    });
+  }
 }
 
 function endTest(trace) {
@@ -23,8 +36,21 @@ function endTest(trace) {
 
 function displayTest(s, record) {
   if (typeof record.get === 'undefined') {
-    s.push(`
+    switch (record.get) {
+      case 'wait':
+        s.push(`
+        cy.${record.event}('${record.value}').then((xhr) => {
+          <span class="comment">// Check that the Ajax call is well executed</span>
+          expect(xhr.status).to.be.gte(200)
+          expect(xhr.status).to.be.lt(400)
+        })`);
+        break;
+
+      default:
+        s.push(`
         cy.${record.event}('${record.value}')`);
+        break;
+    }
   } else {
     s.push(`
         cy.get('${record.get}')${

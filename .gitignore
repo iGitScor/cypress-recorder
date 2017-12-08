@@ -1,2 +1,8 @@
+.env
+
 .idea/
+
+build/
+tests/build/
+
 node_modules/

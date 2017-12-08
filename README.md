@@ -18,9 +18,11 @@ Make the test accessible.
 
 ```shell
 git clone https://github.com/iGitScor/cypress-recorder.git
+cd cypress-recorder
+make build
 ```
 
-Follow the [Google documentation](https://developer.chrome.com/extensions/getstarted#unpacked)
+Follow the [Google documentation](https://developer.chrome.com/extensions/getstarted#unpacked) and use build folder.
 
 ## Developing
 

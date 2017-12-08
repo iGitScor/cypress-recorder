@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="build/init.js"></script>
+    <main><button type="button" data-test-action="void">Button</button></main>
+    <script>
+        cyRecording = true;
+
+        var request = new XMLHttpRequest();
+        request.open("get", "https://api-adresse.data.gouv.fr/search/?q=8 bd du port", true);
+        request.send();
+
+        var requestInternal = new XMLHttpRequest();
+        requestInternal.open("get", "www.google.fr", true);
+        requestInternal.send();
+
+        var req2 = new XMLHttpRequest();
+        req2.open("get", "api.json", true);
+        req2.send();
+
+        var req3 = new XMLHttpRequest();
+        req3.open("get", "/api.json", true);
+        req3.send();
+    </script>
+</body>
+</html>
